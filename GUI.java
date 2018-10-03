@@ -1,4 +1,4 @@
-// Created oct 01 mon 2018
+// Created oct 03 wed 2018
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -10,14 +10,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.io.BufferedInputStream;
-
-public class GUI extends Thread {
+public class GUI extends Thread implements Runnable {
 
   public static BorderLayout border;
   public static JFrame frame = new JFrame ();
@@ -25,6 +21,7 @@ public class GUI extends Thread {
   public static JLabel label, waitBar;
   public static JButton buttonDownload;
   private static ImageIcon picDownload;
+  public static JTextField fieldAddress, fieldOut;
 
   public GUI () {
       initUI ();
@@ -51,59 +48,31 @@ public class GUI extends Thread {
     buttonDownload.setBackground ( Color.GRAY );
     buttonDownload.setForeground ( Color.WHITE );
 
+    fieldAddress = new JTextField ();
+    fieldOut = new JTextField ( "*.*" );
+
     paneButton.setLayout ( new GridLayout ( 1, 1, 0, 0 ) );
     paneButton.add ( buttonDownload );
 
     windowContent.setBackground ( Color.DARK_GRAY );
+    windowContent.add ( fieldAddress, BorderLayout.NORTH );
+    windowContent.add ( fieldOut, BorderLayout.SOUTH );
     windowContent.add ( label, BorderLayout.WEST );
     windowContent.add ( paneButton, BorderLayout.EAST );
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     buttonDownload.addActionListener ( ( ActionEvent event ) -> {
       System.out.println ( "button download" );
-      GUI gui = new GUI ();
-      gui.start ();
+      Downloader down = new Downloader ( fieldAddress.getText (), fieldOut.getText () );
+      Thread t1 = new Thread ( down );
+      t1.start ();
     }); // end of adapter
   }
 
-  private void close () {
+  public void close () {
     try {
       Thread.sleep ( 3000 );
     } catch ( InterruptedException e ) { e.printStackTrace (); }
     System.exit ( 0 );
-  }
-
-  public void run () {
-    String FILE_NAME = "audio.mp3";
-    String FILE_URL;
-    String info = null;
-
-    FILE_URL = "https://archive.org/download/Episode1-IntroductionToThePodcast/MBp1.mp3";
-    //FILE_URL = "https://archive.org/download/PlanetoftheApes/Retroist-154-The-Planet-of-the-Apes.mp3";
-    // https://archive.org/details/Episode1-IntroductionToThePodcast
-    try (
-          BufferedInputStream in = new BufferedInputStream ( new URL ( FILE_URL ).openStream () );
-          FileOutputStream fileOutputStream = new FileOutputStream ( FILE_NAME );
-    ) {
-        info = ( ( new URL ( FILE_URL ).openConnection ().getContentLength () ) / 1000000.0 ) + " MB";
-        System.out.println ( info );
-        label.setText ( info );
-
-        byte [] dataBuffer = new byte [ 1024 ];
-        int bytesRead;
-        int i = 0;
-        while ( ( bytesRead = in.read ( dataBuffer, 0, 1024 ) ) != -1 ) {
-          fileOutputStream.write ( dataBuffer, 0, bytesRead );
-          i++;
-          String receivedData = String.valueOf ( ( i * 1.024 ) / 1000.0 );
-          label.setText ( receivedData );
-          System.out.println ( ( i * 1.024 ) / 1000.0 );
-        }
-      } catch ( IOException e ) {
-        System.out.println ( e );
-      }
-      label.setText ( "OK! " + info );
-      System.out.println ( "OK! " + FILE_NAME );
-      close ();
   }
 }
