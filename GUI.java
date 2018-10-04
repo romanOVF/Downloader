@@ -1,4 +1,4 @@
-// Created oct 03 wed 2018
+// Created oct 04 thu 2018
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -19,8 +19,8 @@ public class GUI extends Thread implements Runnable {
   public static JFrame frame = new JFrame ();
   public static JPanel windowContent, paneButton;
   public static JLabel label, waitBar;
-  public static JButton buttonDownload;
-  private static ImageIcon picDownload;
+  public static JButton buttonGetProperties, buttonDownload;
+  private static ImageIcon picProperties, picDownload;
   public static JTextField fieldAddress, fieldOut;
 
   public GUI () {
@@ -35,6 +35,7 @@ public class GUI extends Thread implements Runnable {
   }
 
   private void initUI () {
+    picProperties = new ImageIcon ( getClass ().getResource ( "pic/shelf.png" ) );
     picDownload = new ImageIcon ( getClass ().getResource ( "pic/download_00.png" ) );
     border = new BorderLayout ();
     windowContent = new JPanel ();
@@ -44,6 +45,10 @@ public class GUI extends Thread implements Runnable {
     label = new JLabel ( ". . .               ", SwingConstants.CENTER ); // 20 times
     label.setFont ( new Font ( "Liberation Sans", Font.BOLD, 16 ) );
     label.setForeground ( Color.WHITE );
+
+    buttonGetProperties = new JButton ( "properties", picProperties );
+    buttonGetProperties.setBackground ( Color.GRAY );
+    buttonGetProperties.setForeground ( Color.WHITE );
     buttonDownload = new JButton ( "Download", picDownload );
     buttonDownload.setBackground ( Color.GRAY );
     buttonDownload.setForeground ( Color.WHITE );
@@ -51,7 +56,8 @@ public class GUI extends Thread implements Runnable {
     fieldAddress = new JTextField ();
     fieldOut = new JTextField ( "*.*" );
 
-    paneButton.setLayout ( new GridLayout ( 1, 1, 0, 0 ) );
+    paneButton.setLayout ( new GridLayout ( 2, 1, 0, 0 ) );
+    paneButton.add ( buttonGetProperties );
     paneButton.add ( buttonDownload );
 
     windowContent.setBackground ( Color.DARK_GRAY );
@@ -60,10 +66,17 @@ public class GUI extends Thread implements Runnable {
     windowContent.add ( label, BorderLayout.WEST );
     windowContent.add ( paneButton, BorderLayout.EAST );
 
+    buttonGetProperties.addActionListener ( ( ActionEvent event ) -> {
+      System.out.println ( "button properties" );
+      Downloader down = new Downloader ( fieldAddress.getText (), fieldOut.getText (), false );
+      Thread t1 = new Thread ( down );
+      t1.start ();
+    }); // end of adapter
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     buttonDownload.addActionListener ( ( ActionEvent event ) -> {
       System.out.println ( "button download" );
-      Downloader down = new Downloader ( fieldAddress.getText (), fieldOut.getText () );
+      Downloader down = new Downloader ( fieldAddress.getText (), fieldOut.getText (), true );
       Thread t1 = new Thread ( down );
       t1.start ();
     }); // end of adapter
