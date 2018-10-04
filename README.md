@@ -6,3 +6,4 @@ I rewrote the code a bit, leaving only two classes. Added "Download" button.
 Some changes have been added: the “URL” field and the “extension” field, etc.
 2018 oct 4
 Added button properties
+Added download spinner and improved view of the file download size.
