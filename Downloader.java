@@ -1,4 +1,4 @@
-// Created oct 04 thu 2018
+// Created oct 05 fri 2018
 // https://docs.oracle.com/javase/tutorial/java/data/numberformat.html
 
 //FILE_URL = "https://archive.org/download/Episode1-IntroductionToThePodcast/MBp1.mp3";
@@ -25,59 +25,76 @@ public class Downloader extends Thread {
   public void run () {
     double amount = 0;
     String infoAmount = null;
+    String output = null;
     GUI gui = new GUI ();
     gui.setSpinner ();
-    DecimalFormat formatter;
+    DecimalFormat formatterMB = new DecimalFormat ( "    .## MB" );
+    DecimalFormat formatterKB = new DecimalFormat ( " ###.## KB" );
 
-    if ( key ) {
+    if ( key ) { // get file ( push button "Download" )
       try (
             BufferedInputStream in = new BufferedInputStream ( new URL ( FILE_URL ).openStream () );
             FileOutputStream fileOutputStream = new FileOutputStream ( FILE_NAME );
       ) {
           // get info of file
-          amount = ( ( new URL ( FILE_URL ).openConnection ().getContentLength () ) / 1000000.0 );
-          System.out.printf ( "%.2f " + "MB\n", amount );
-          gui.label.setText ( String.valueOf ( amount ) );
+          amount = ( ( new URL ( FILE_URL ).openConnection ().getContentLength () ) / 1000.0 );
           // get file
           byte [] dataBuffer = new byte [ 1024 ];
           int bytesRead;
           double i = 0;
           while ( ( bytesRead = in.read ( dataBuffer, 0, 1024 ) ) != -1 ) {
             fileOutputStream.write ( dataBuffer, 0, bytesRead );
-            i++;
-            amount = ( i * 1.024 ) / 1000.0;
-            // formating amount .## MB
-            formatter = new DecimalFormat ( " .## MB" );
-            String output = formatter.format ( amount );
+            i++; // received bytes
+            // formating amount to KB
+            if ( i < 1000 ) {
+              output = formatterKB.format ( i * 1.024 );
+              gui.label.setText ( output );
+              System.out.printf ( "%.2fKB\n", ( i * 1.024 ) );
+            }
+              else { // formating amount to MB
+                output = formatterMB.format ( ( i * 1.024 ) / 1000.0 );
+                gui.label.setText ( output );
+                System.out.printf ( "%.2f MB\n", ( ( i * 1.024 ) / 1000.0 ) );
+              }
             //
-            gui.label.setText ( output );
-            System.out.printf ( "%.2f MB\n", amount );
           }
         } catch ( IOException e ) {
           System.out.println ( e );
         }
     }
-      else { // get info of file
+      else { // get info of file ( push button "properties" )
         try (
               BufferedInputStream in = new BufferedInputStream ( new URL ( FILE_URL ).openStream () );
         ) {
-          amount = ( ( new URL ( FILE_URL ).openConnection ().getContentLength () ) / 1000000.0 );
-          System.out.printf ( "%.2f " + "MB\n", amount );
-          // formating amount .## MB
-          formatter = new DecimalFormat ( " .## MB" );
-          String output = formatter.format ( amount );
-          //
-          gui.label.setText ( output );
+          amount = ( ( new URL ( FILE_URL ).openConnection ().getContentLength () ) / 1000.0 );
+          System.out.printf ( "%.2f " + "MB\n", amount / 1000.0 );
+
+          if ( amount < 1000 ) {
+            System.out.println ( amount );
+            output = formatterKB.format ( amount );
+            gui.label.setText ( output );
+          }
+            else {
+              System.out.println ( amount / 1000.0 );
+              output = formatterMB.format ( amount / 1000.0 );
+              gui.label.setText ( output );
+            }
           } catch ( IOException e ) {
             System.out.println ( e );
           }
       }
         gui.unSetSpinner ();
-        // formating amount .## MB
-        formatter = new DecimalFormat ( " .## MB" );
-        String output = formatter.format ( amount );
-        //
-        gui.label.setText ( output );
+        if ( amount < 1000 ) {
+          System.out.println ( amount );
+          output = formatterKB.format ( amount );
+          gui.label.setText ( output );
+        }
+          else {
+            System.out.println ( amount / 1000.0 );
+            output = formatterMB.format ( amount / 1000.0 );
+            gui.label.setText ( output );
+          }
+        //System.out.println ( amount );
         System.out.println ( FILE_NAME );
       }
 }

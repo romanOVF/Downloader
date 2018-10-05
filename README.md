@@ -7,3 +7,6 @@ Some changes have been added: the “URL” field and the “extension” field,
 2018 oct 4
 Added button properties
 Added download spinner and improved view of the file download size.
+2018 oct 5
+Improved viewing of file download size in the program window and some changes
+in file GUI.java.

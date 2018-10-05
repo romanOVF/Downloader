@@ -1,4 +1,4 @@
-// Created oct 04 thu 2018
+// Created oct 05 fri 2018
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -30,7 +30,6 @@ public class GUI extends Thread implements Runnable {
       frame.setSize ( 500, 180 );
       frame.setResizable ( true );
       frame.setDefaultCloseOperation ( JFrame.EXIT_ON_CLOSE );
-      frame.setLocationRelativeTo ( null );
       frame.setVisible ( true );
   }
 
@@ -45,7 +44,7 @@ public class GUI extends Thread implements Runnable {
     waitBar = new JLabel ( alfa );
     windowContent.setLayout ( new BorderLayout () );
 
-    label = new JLabel ( ". . .", SwingConstants.CENTER ); // 20 times
+    label = new JLabel ( "  . . ." );
     label.setFont ( new Font ( "Liberation Sans", Font.BOLD, 16 ) );
     label.setForeground ( Color.WHITE );
 
