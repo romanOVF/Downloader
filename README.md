@@ -10,3 +10,5 @@ Added download spinner and improved view of the file download size.
 2018 oct 5
 Improved viewing of file download size in the program window and some changes
 in file GUI.java.
+2018 oct 06
+Fixed some bugs in the code. Added context menu.
