@@ -1,4 +1,4 @@
-// Created oct 06 sat 2018
+// Created oct 13 sat 2018
 
 // https://stackoverflow.com/questions/1912758/how-to-add-a-popup-menu-to-a-jtextfield
 // http://www.java2s.com/Code/Java/Swing-JFC/Apopupmenuissometimescalledacontextmenu.htm
@@ -137,19 +137,16 @@ public class GUI extends Thread {
     }); // end of adapter
   }
 
-  static class SelectAll extends TextAction
-    {
-        public SelectAll()
-        {
-            super("Select All");
-            putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control S"));
+  static class SelectAll extends TextAction {
+        public SelectAll () {
+            super ( "Select All" );
+            putValue ( Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke ( "control S" ) );
         }
 
-        public void actionPerformed(ActionEvent e)
-        {
-            JTextComponent component = getFocusedComponent();
-            component.selectAll();
-            component.requestFocusInWindow();
+        public void actionPerformed ( ActionEvent e ) {
+            JTextComponent component = getFocusedComponent ();
+            component.selectAll ();
+            component.requestFocusInWindow ();
         }
     }
 

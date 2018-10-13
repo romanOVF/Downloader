@@ -1,4 +1,4 @@
-// Created oct 06 sat 2018
+// Created oct 13 sat 2018
 // https://docs.oracle.com/javase/tutorial/java/data/numberformat.html
 
 //ADDRESS_URL = "https://archive.org/download/Episode1-IntroductionToThePodcast/MBp1.mp3";
@@ -11,11 +11,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.io.BufferedInputStream;
-
 import java.text.DecimalFormat;
 
 public class Downloader extends Thread {
-  
+
   public static String ADDRESS_URL;
   public static String FILE_NAME;
   public static boolean key;
