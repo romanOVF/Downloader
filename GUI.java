@@ -1,4 +1,4 @@
-// Created oct 13 sat 2018
+// Created oct 18 thu 2018
 
 // https://stackoverflow.com/questions/1912758/how-to-add-a-popup-menu-to-a-jtextfield
 // http://www.java2s.com/Code/Java/Swing-JFC/Apopupmenuissometimescalledacontextmenu.htm
@@ -124,8 +124,8 @@ public class GUI extends Thread {
       addressURL = fieldAddressURL.getText ();
       fileName = fieldFileName.getText ();
       Downloader down = new Downloader ( false );
-      Thread t1 = new Thread ( down );
-      t1.start ();
+      //Thread t1 = new Thread ( down );
+      down.start ();
     }); // end of adapter
 
     //////////////////////////////////////////////////////////////////////////
