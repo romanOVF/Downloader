@@ -124,7 +124,6 @@ public class GUI extends Thread {
       addressURL = fieldAddressURL.getText ();
       fileName = fieldFileName.getText ();
       Downloader down = new Downloader ( false );
-      //Thread t1 = new Thread ( down );
       down.start ();
     }); // end of adapter
 
@@ -132,8 +131,7 @@ public class GUI extends Thread {
     buttonDownload.addActionListener ( ( ActionEvent event ) -> {
       System.out.println ( "button download" );
       Downloader down = new Downloader ( true );
-      Thread t1 = new Thread ( down );
-      t1.start ();
+      down.start ();
     }); // end of adapter
   }
 
