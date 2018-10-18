@@ -12,3 +12,5 @@ Improved viewing of file download size in the program window and some changes
 in file GUI.java.  
 2018 oct 06  
 Fixed some bugs in the code. Added context menu.  
+2018 10 18  
+A small fix in the code: removed the line 'Thread t1 = new Thread (down)'  
