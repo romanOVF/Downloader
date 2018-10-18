@@ -42,6 +42,7 @@ public class GUI extends Thread {
 
   public static String addressURL;
   public static String fileName;
+  public static GUI gui;
 
   public GUI () {
       initUI ();
@@ -58,6 +59,7 @@ public class GUI extends Thread {
     picSpinner = new ImageIcon ( getClass ().getResource ( "pic/spinner_warning_by_193x24.gif" ) );
     picProperties = new ImageIcon ( getClass ().getResource ( "pic/shelf.png" ) );
     picDownload = new ImageIcon ( getClass ().getResource ( "pic/download_00.png" ) );
+
     border = new BorderLayout ();
     windowContent = new JPanel ();
     paneButton = new JPanel ();
@@ -121,16 +123,22 @@ public class GUI extends Thread {
 
     buttonGetProperties.addActionListener ( ( ActionEvent event ) -> {
       System.out.println ( "button properties" );
-      addressURL = fieldAddressURL.getText ();
-      fileName = fieldFileName.getText ();
-      Downloader down = new Downloader ( false );
+      Downloader down = new Downloader ( gui );
+      //Downloader down = new Downloader ();
+      down.ADDRESS_URL = fieldAddressURL.getText ();
+      down.FILE_NAME = fieldFileName.getText ();
+      down.setKey ( false );
       down.start ();
     }); // end of adapter
 
     //////////////////////////////////////////////////////////////////////////
     buttonDownload.addActionListener ( ( ActionEvent event ) -> {
       System.out.println ( "button download" );
-      Downloader down = new Downloader ( true );
+      Downloader down = new Downloader ( gui );
+      //Downloader down = new Downloader ();
+      down.ADDRESS_URL = fieldAddressURL.getText ();
+      down.FILE_NAME = fieldFileName.getText ();
+      down.setKey( true );
       down.start ();
     }); // end of adapter
   }

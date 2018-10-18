@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.io.BufferedInputStream;
 import java.text.DecimalFormat;
+import javax.swing.JOptionPane;
 
 public class Downloader extends Thread {
 
@@ -19,10 +20,13 @@ public class Downloader extends Thread {
   public static String FILE_NAME;
   public static boolean key;
   public static GUI gui = new GUI ();
+  //public static GUI gui;
 
-  public Downloader ( boolean key ) {
-    this.key = key;
-  }
+  public Downloader ( GUI guit ) {
+    this.gui = gui;
+  } // */
+
+  public void setKey ( boolean key ) { this.key = key; }
 
   public void run () {
     double amount = 0;
@@ -31,9 +35,6 @@ public class Downloader extends Thread {
     gui.setSpinner ();
     DecimalFormat formatterMB = new DecimalFormat ( "    .## MB" );
     DecimalFormat formatterKB = new DecimalFormat ( " ###.## KB" );
-
-    ADDRESS_URL = gui.addressURL;
-    FILE_NAME = gui.fileName;
 
     if ( key ) { // get file ( push button "Download" )
       try (
@@ -62,9 +63,7 @@ public class Downloader extends Thread {
               }
             //
           }
-        } catch ( IOException e ) {
-          System.out.println ( e );
-        }
+        } catch ( IOException e ) { System.out.println ( e ); }
     }
       else { // get info of file ( push button "properties" )
         try (
@@ -81,9 +80,7 @@ public class Downloader extends Thread {
               output = formatterMB.format ( amount / 1000.0 );
               gui.label.setText ( output );
             }
-          } catch ( IOException e ) {
-            System.out.println ( e );
-          }
+          } catch ( IOException e ) { System.out.println ( e ); }
       }
         gui.unSetSpinner ();
         if ( amount < 1000 ) {
@@ -98,5 +95,8 @@ public class Downloader extends Thread {
           }
         //System.out.println ( amount );
         System.out.println ( FILE_NAME );
+        System.out.println ( Thread.currentThread () );
+        JOptionPane.showMessageDialog ( null, "That's All!" );
+        System.out.println ( "DONE!" );
       }
 }
