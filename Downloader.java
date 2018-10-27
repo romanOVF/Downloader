@@ -21,9 +21,7 @@ public class Downloader extends Thread {
   public static boolean key;
   public static GUI gui = new GUI ();
 
-  public Downloader ( GUI guit ) {
-    this.gui = gui;
-  }
+  public Downloader ( GUI guit ) { this.gui = gui; }
 
   public void setKey ( boolean key ) { this.key = key; }
 
@@ -32,8 +30,10 @@ public class Downloader extends Thread {
     String infoAmount = null;
     String output = null;
     gui.setSpinner ();
-    DecimalFormat formatterMB = new DecimalFormat ( "    .## MB" );
-    DecimalFormat formatterKB = new DecimalFormat ( " ###.## KB" );
+    DecimalFormat formatterMBDownload = new DecimalFormat ( "loaded    .## MB" );
+    DecimalFormat formatterKBDownload = new DecimalFormat ( "loaded   ###.## KB" );
+    DecimalFormat formatterMBProperties = new DecimalFormat ( "file size    .## MB" );
+    DecimalFormat formatterKBProperties = new DecimalFormat ( "file size   ###.## KB" );
 
     if ( key ) { // to get file - push button "Download"
       try (
@@ -51,12 +51,12 @@ public class Downloader extends Thread {
             i++; // received bytes
             // formating amount to KB
             if ( i < 1000 ) {
-              output = formatterKB.format ( i );
+              output = formatterKBDownload.format ( i );
               gui.labelInfoDownload.setText ( output );
               System.out.printf ( "%.2f KB\n", i );
             }
               else { // formating amount to MB
-                output = formatterMB.format ( i / 1000.0 );
+                output = formatterMBDownload.format ( i / 1000.0 );
                 gui.labelInfoDownload.setText ( output );
                 System.out.printf ( "%.2f MB\n", ( i / 1000.0 ) );
               }
@@ -72,26 +72,29 @@ public class Downloader extends Thread {
           System.out.printf ( "%.2f " + " MB\n", amount / 1000.0 );
 
           if ( amount < 1000 ) {
-            output = formatterKB.format ( amount );
-            gui.labelInfoDownload.setText ( output );
+            output = formatterKBProperties.format ( amount );
+            gui.labelPropertiesFile.setText ( output );
           }
             else {
-              output = formatterMB.format ( amount / 1000.0 );
-              gui.labelInfoDownload.setText ( output );
+              output = formatterMBProperties.format ( amount / 1000.0 );
+              gui.labelPropertiesFile.setText ( output );
             }
           } catch ( IOException e ) { System.out.println ( e ); }
       }
-        gui.unSetSpinner ();
-        if ( amount < 1000 ) {
-          System.out.println ( amount + " KB" );
-          output = formatterKB.format ( amount );
-          gui.labelInfoDownload.setText ( output );
-        }
-          else {
-            System.out.println ( ( amount / 1000.0 ) + " MB" );
-            output = formatterMB.format ( amount / 1000.0 );
+        gui.setAlfaSpinner ();
+
+        if ( key ) { // get size loaded file
+          if ( amount < 1000 ) {
+            System.out.println ( amount + " KB" );
+            output = formatterKBDownload.format ( amount );
             gui.labelInfoDownload.setText ( output );
           }
+            else {
+              System.out.println ( ( amount / 1000.0 ) + " MB" );
+              output = formatterMBDownload.format ( amount / 1000.0 );
+              gui.labelInfoDownload.setText ( output );
+            }
+        }
         //System.out.println ( amount ); // the line checks value while debugging
         System.out.println ( FILE_NAME );
         System.out.println ( Thread.currentThread () );

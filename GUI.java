@@ -13,6 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Font;
 import javax.swing.Action;
+import javax.swing.border.TitledBorder;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -31,115 +32,97 @@ public class GUI extends Thread {
 
   public static BorderLayout border;
   public static JFrame frame = new JFrame ();
-  public static JPanel windowContent, paneButton;
-  public static JLabel labelInfoDownload, waitBar;
+  public static JPanel windowContent, paneProgress, paneButton;
+  public static JLabel labelInfoDownload, labelPropertiesFile, waitBar;
   public static JButton buttonGetProperties, buttonDownload;
-  private static ImageIcon alfa, picSpinner, picProperties, picDownload;
+  private static ImageIcon alfaSpinner, picSpinner, picProperties, picDownload;
   public static JTextField fieldAddressURL, fieldFileName;
-  public static JPopupMenu poUpMenuOK;
+  public static JPopupMenu popUpMenuContext;
 
   public static String addressURL;
   public static String fileName;
   public static GUI gui;
 
   public GUI () {
-      initUI ();
-      frame.setTitle ( "File downloader v.00" );
-      frame.setContentPane ( windowContent );
-      frame.setSize ( 500, 180 );
-      frame.setResizable ( true );
-      frame.setDefaultCloseOperation ( JFrame.EXIT_ON_CLOSE );
-      frame.setVisible ( true );
+    setPictureIcon ();
+    initUI ();
+    setFrame ();
   }
 
   private void initUI () {
-    alfa = new ImageIcon ( getClass ().getResource ( "pic/alfa_193x24.png" ) );
-    picSpinner = new ImageIcon ( getClass ().getResource ( "pic/spinner_warning_by_193x24.gif" ) );
-    picProperties = new ImageIcon ( getClass ().getResource ( "pic/shelf.png" ) );
-    picDownload = new ImageIcon ( getClass ().getResource ( "pic/download_00.png" ) );
 
     border = new BorderLayout ();
     windowContent = new JPanel ();
     paneButton = new JPanel ();
-    waitBar = new JLabel ( alfa );
+    paneProgress = new JPanel ();
+
+    setLabel ();
+    setButton ();
+    setContextMenuFieldURLFile ();
+    addContentToPanel ();
+    listeners ();
+  }
+
+  // Methods
+
+  private void setLabel () {
+    waitBar = new JLabel ( alfaSpinner );
+    paneProgress.setBorder ( new TitledBorder ( "progress" ) );
     windowContent.setLayout ( new BorderLayout () );
 
     labelInfoDownload = new JLabel ( "  . . ." );
     labelInfoDownload.setFont ( new Font ( "Liberation Sans", Font.BOLD, 16 ) );
     labelInfoDownload.setForeground ( Color.WHITE );
 
+    labelPropertiesFile = new JLabel ( "  . . ." );
+    labelPropertiesFile.setFont ( new Font ( "Liberation Sans", Font.BOLD, 16 ) );
+    labelPropertiesFile.setForeground ( Color.WHITE );
+  }
+
+  private void setButton () {
     buttonGetProperties = new JButton ( "properties", picProperties );
     buttonGetProperties.setBackground ( Color.GRAY );
     buttonGetProperties.setForeground ( Color.WHITE );
     buttonDownload = new JButton ( "Download", picDownload );
     buttonDownload.setBackground ( Color.GRAY );
     buttonDownload.setForeground ( Color.WHITE );
+  }
 
+  private void setContextMenuFieldURLFile () {
     fieldAddressURL = new JTextField ();
     fieldFileName = new JTextField ( "file.*" );
-    poUpMenuOK = new JPopupMenu ();
+    popUpMenuContext = new JPopupMenu ();
 
     Action copy = new DefaultEditorKit.CopyAction ();
     copy.putValue ( Action.NAME, "Copy" );
     copy.putValue ( Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke ( "control C" ) );
-    poUpMenuOK.add ( copy );
+    popUpMenuContext.add ( copy );
 
     Action paste = new DefaultEditorKit.PasteAction ();
     paste.putValue ( Action.NAME, "Paste" );
     paste.putValue ( Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke ( "control V" ) );
-    poUpMenuOK.add ( paste );
+    popUpMenuContext.add ( paste );
 
     Action cut = new DefaultEditorKit.CutAction ();
     cut.putValue ( Action.NAME, "Cut" );
     cut.putValue ( Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke ( "control X" ) );
-    poUpMenuOK.add ( cut );
+    popUpMenuContext.add ( cut );
 
     Action selectAll = new SelectAll ();
-    poUpMenuOK.add ( selectAll );
+    popUpMenuContext.add ( selectAll );
 
     frame.addMouseListener ( new MouseAdapter () {
       public void mouseReleased ( MouseEvent e ) {
         if ( e.getButton () == e.BUTTON3 ) {
-          poUpMenuOK.show ( e.getComponent (), e.getX (), e.getY () );
+          popUpMenuContext.show ( e.getComponent (), e.getX (), e.getY () );
         }
       }
-    });
-    fieldAddressURL.setComponentPopupMenu ( poUpMenuOK );
-    fieldFileName.setComponentPopupMenu ( poUpMenuOK );
-
-    paneButton.setLayout ( new GridLayout ( 2, 1, 0, 0 ) );
-    paneButton.add ( buttonGetProperties );
-    paneButton.add ( buttonDownload );
-
-    windowContent.setBackground ( Color.DARK_GRAY );
-    windowContent.add ( fieldAddressURL, BorderLayout.NORTH );
-    windowContent.add ( fieldFileName, BorderLayout.SOUTH );
-    windowContent.add ( labelInfoDownload, BorderLayout.WEST );
-    windowContent.add ( paneButton, BorderLayout.EAST );
-    windowContent.add ( waitBar, BorderLayout.CENTER );
-
-    // LISTENERS
-    buttonGetProperties.addActionListener ( ( ActionEvent event ) -> {
-      System.out.println ( "button properties" );
-      Downloader down = new Downloader ( gui );
-      down.ADDRESS_URL = fieldAddressURL.getText ();
-      down.FILE_NAME = fieldFileName.getText ();
-      down.setKey ( false );
-      down.start ();
-    }); // end of adapter
-
-
-    buttonDownload.addActionListener ( ( ActionEvent event ) -> {
-      System.out.println ( "button download" );
-      Downloader down = new Downloader ( gui );
-      down.ADDRESS_URL = fieldAddressURL.getText ();
-      down.FILE_NAME = fieldFileName.getText ();
-      down.setKey( true );
-      down.start ();
-    }); // end of adapter
+    } );
+    fieldAddressURL.setComponentPopupMenu ( popUpMenuContext );
+    fieldFileName.setComponentPopupMenu ( popUpMenuContext );
   }
 
-  static class SelectAll extends TextAction {
+  private static class SelectAll extends TextAction {
         public SelectAll () {
             super ( "Select All" );
             putValue ( Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke ( "control S" ) );
@@ -152,19 +135,65 @@ public class GUI extends Thread {
         }
     }
 
+  private void setPictureIcon () {
+    alfaSpinner = new ImageIcon ( getClass ().getResource ( "pic/alfa_193x24.png" ) );
+    picSpinner = new ImageIcon ( getClass ().getResource ( "pic/spinner_warning_by_193x24.gif" ) );
+    picProperties = new ImageIcon ( getClass ().getResource ( "pic/shelf.png" ) );
+    picDownload = new ImageIcon ( getClass ().getResource ( "pic/download_00.png" ) );
+  }
+
   public void setSpinner () {
     waitBar.setIcon ( picSpinner );
   }
 
-  public void unSetSpinner () {
-    waitBar.setIcon ( alfa );
+  public void setAlfaSpinner () {
+    waitBar.setIcon ( alfaSpinner );
   }
 
-  public void close () {
-    try {
-      Thread.sleep ( 3000 );
-    } catch ( InterruptedException e ) { e.printStackTrace (); }
-    System.exit ( 0 );
+  private void addContentToPanel () {
+    paneProgress.setLayout ( new GridLayout ( 3, 2, 0, 0 ) );
+    paneProgress.setBackground ( Color.GRAY );
+    paneProgress.add ( labelInfoDownload );
+    paneProgress.add ( waitBar );
+    paneProgress.add ( labelPropertiesFile );
+
+    paneButton.setLayout ( new GridLayout ( 2, 0, 0, 0 ) );
+    paneButton.add ( buttonGetProperties );
+    paneButton.add ( buttonDownload );
+
+    windowContent.add ( fieldAddressURL, BorderLayout.NORTH );
+    windowContent.add ( fieldFileName, BorderLayout.SOUTH );
+    windowContent.add ( paneButton, BorderLayout.EAST );
+    windowContent.add ( paneProgress, BorderLayout.CENTER );
+  }
+
+  private void listeners () {
+    buttonGetProperties.addActionListener ( ( ActionEvent event ) -> {
+      System.out.println ( "button properties" );
+      Downloader down = new Downloader ( gui );
+      down.ADDRESS_URL = fieldAddressURL.getText ();
+      down.FILE_NAME = fieldFileName.getText ();
+      down.setKey ( false );
+      down.start ();
+    } ); // end of adapter
+
+    buttonDownload.addActionListener ( ( ActionEvent event ) -> {
+      System.out.println ( "button download" );
+      Downloader down = new Downloader ( gui );
+      down.ADDRESS_URL = fieldAddressURL.getText ();
+      down.FILE_NAME = fieldFileName.getText ();
+      down.setKey( true );
+      down.start ();
+    } ); // end of adapter
+  }
+
+  private void setFrame () {
+    frame.setTitle ( "File downloader v.00" );
+    frame.setContentPane ( windowContent );
+    frame.setSize ( 500, 180 );
+    frame.setResizable ( true );
+    frame.setDefaultCloseOperation ( JFrame.EXIT_ON_CLOSE );
+    frame.setVisible ( true );
   }
 
 }
