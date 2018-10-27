@@ -44,26 +44,26 @@ public class GUI extends Thread {
   public static GUI gui;
 
   public GUI () {
+    setLayout ();
+    setPanel ();
     setPictureIcon ();
-    initUI ();
-    setFrame ();
-  }
-
-  private void initUI () {
-
-    border = new BorderLayout ();
-    windowContent = new JPanel ();
-    paneButton = new JPanel ();
-    paneProgress = new JPanel ();
-
     setLabel ();
     setButton ();
     setContextMenuFieldURLFile ();
     addContentToPanel ();
     listeners ();
+    setFrame ();
   }
 
   // Methods
+
+  private void setLayout () { border = new BorderLayout (); }
+
+  private void setPanel () {
+    windowContent = new JPanel ();
+    paneButton = new JPanel ();
+    paneProgress = new JPanel ();
+  }
 
   private void setLabel () {
     waitBar = new JLabel ( alfaSpinner );
