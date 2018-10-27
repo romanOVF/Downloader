@@ -18,8 +18,8 @@ public class Downloader extends Thread {
 
   public static String ADDRESS_URL;
   public static String FILE_NAME;
-  public static boolean key;
-  public static GUI gui = new GUI ();
+  private static boolean key;
+  private static GUI gui = new GUI ();
 
   public Downloader ( GUI guit ) { this.gui = gui; }
 
@@ -88,11 +88,13 @@ public class Downloader extends Thread {
             System.out.println ( amount + " KB" );
             output = formatterKBDownload.format ( amount );
             gui.labelInfoDownload.setText ( output );
+            gui.labelPropertiesFile.setText ( "" );
           }
             else {
               System.out.println ( ( amount / 1000.0 ) + " MB" );
               output = formatterMBDownload.format ( amount / 1000.0 );
               gui.labelInfoDownload.setText ( output );
+              gui.labelPropertiesFile.setText ( "" );
             }
         }
         //System.out.println ( amount ); // the line checks value while debugging

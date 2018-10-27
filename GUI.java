@@ -3,6 +3,7 @@
 // https://stackoverflow.com/questions/1912758/how-to-add-a-popup-menu-to-a-jtextfield
 // http://www.java2s.com/Code/Java/Swing-JFC/Apopupmenuissometimescalledacontextmenu.htm
 // https://stackoverflow.com/questions/30682416/java-right-click-copy-cut-paste-on-textfield
+// http://www.java2s.com/Code/Java/Swing-JFC/DemonstrationofFiledialogboxes.htm
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -16,6 +17,7 @@ import javax.swing.Action;
 import javax.swing.border.TitledBorder;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -34,8 +36,8 @@ public class GUI extends Thread {
   public static JFrame frame = new JFrame ();
   public static JPanel windowContent, paneProgress, paneButton;
   public static JLabel labelInfoDownload, labelPropertiesFile, waitBar;
-  public static JButton buttonGetProperties, buttonDownload;
-  private static ImageIcon alfaSpinner, picSpinner, picProperties, picDownload;
+  public static JButton buttonGetProperties, buttonDownload, buttonSave;
+  private static ImageIcon alfaSpinner, picSpinner, picProperties, picDownload, picSave;
   public static JTextField fieldAddressURL, fieldFileName;
   public static JPopupMenu popUpMenuContext;
 
@@ -80,6 +82,10 @@ public class GUI extends Thread {
   }
 
   private void setButton () {
+    buttonSave = new JButton ( "save" );
+    //buttonSave = new JButton ( "save", picSave );
+    buttonSave.setBackground ( Color.GRAY );
+    buttonSave.setForeground ( Color.WHITE );
     buttonGetProperties = new JButton ( "properties", picProperties );
     buttonGetProperties.setBackground ( Color.GRAY );
     buttonGetProperties.setForeground ( Color.WHITE );
@@ -140,6 +146,7 @@ public class GUI extends Thread {
     picSpinner = new ImageIcon ( getClass ().getResource ( "pic/spinner_warning_by_193x24.gif" ) );
     picProperties = new ImageIcon ( getClass ().getResource ( "pic/shelf.png" ) );
     picDownload = new ImageIcon ( getClass ().getResource ( "pic/download_00.png" ) );
+    //picSave = new ImageIcon ( getClass ().getResource ( "pic/save.png" ) );
   }
 
   public void setSpinner () {
@@ -157,9 +164,10 @@ public class GUI extends Thread {
     paneProgress.add ( waitBar );
     paneProgress.add ( labelPropertiesFile );
 
-    paneButton.setLayout ( new GridLayout ( 2, 0, 0, 0 ) );
+    paneButton.setLayout ( new GridLayout ( 3, 0, 0, 0 ) );
     paneButton.add ( buttonGetProperties );
     paneButton.add ( buttonDownload );
+    paneButton.add ( buttonSave );
 
     windowContent.add ( fieldAddressURL, BorderLayout.NORTH );
     windowContent.add ( fieldFileName, BorderLayout.SOUTH );
@@ -185,6 +193,22 @@ public class GUI extends Thread {
       down.setKey( true );
       down.start ();
     } ); // end of adapter
+
+    buttonSave.addActionListener ( new SaveFile () );
+  }
+
+  class SaveFile implements ActionListener {
+    public void actionPerformed ( ActionEvent e ) {
+      JFileChooser choose = new JFileChooser ();
+      // Demonstrate "Save" dialog:
+      int returnValue = choose.showSaveDialog ( windowContent );
+      if ( returnValue == JFileChooser.APPROVE_OPTION ) {
+        fieldFileName.setText ( choose.getCurrentDirectory ().toString () + "/" + choose.getSelectedFile ().getName () );
+      }
+      if ( returnValue == JFileChooser.CANCEL_OPTION ) {
+        fieldFileName.setText("You pressed cancel");
+      }
+    }
   }
 
   private void setFrame () {

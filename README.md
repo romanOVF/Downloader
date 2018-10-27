@@ -18,3 +18,4 @@ Slightly changed the logic of the program. Fixed some bugs when trying to first 
 2018 10 27  
 Some bugs fixed. Slightly improved code readability.  
 GUI made more friendly.  
+Added button "save" to select where to save the file.  
