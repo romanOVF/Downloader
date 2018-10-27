@@ -1,4 +1,4 @@
-// Created oct 18 thu 2018
+// Created oct 27 sat 2018
 
 // https://stackoverflow.com/questions/1912758/how-to-add-a-popup-menu-to-a-jtextfield
 // http://www.java2s.com/Code/Java/Swing-JFC/Apopupmenuissometimescalledacontextmenu.htm
@@ -9,23 +9,22 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Font;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
-import javax.swing.text.JTextComponent;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.DefaultEditorKit.CopyAction;
+import javax.swing.text.JTextComponent;
 import javax.swing.text.TextAction;
 
 public class GUI extends Thread {
@@ -33,12 +32,11 @@ public class GUI extends Thread {
   public static BorderLayout border;
   public static JFrame frame = new JFrame ();
   public static JPanel windowContent, paneButton;
-  public static JLabel label, waitBar;
+  public static JLabel labelInfoDownload, waitBar;
   public static JButton buttonGetProperties, buttonDownload;
   private static ImageIcon alfa, picSpinner, picProperties, picDownload;
   public static JTextField fieldAddressURL, fieldFileName;
-  public static JPopupMenu contextMenu;
-  public static JMenuItem pastMenuItem;
+  public static JPopupMenu poUpMenuOK;
 
   public static String addressURL;
   public static String fileName;
@@ -66,9 +64,9 @@ public class GUI extends Thread {
     waitBar = new JLabel ( alfa );
     windowContent.setLayout ( new BorderLayout () );
 
-    label = new JLabel ( "  . . ." );
-    label.setFont ( new Font ( "Liberation Sans", Font.BOLD, 16 ) );
-    label.setForeground ( Color.WHITE );
+    labelInfoDownload = new JLabel ( "  . . ." );
+    labelInfoDownload.setFont ( new Font ( "Liberation Sans", Font.BOLD, 16 ) );
+    labelInfoDownload.setForeground ( Color.WHITE );
 
     buttonGetProperties = new JButton ( "properties", picProperties );
     buttonGetProperties.setBackground ( Color.GRAY );
@@ -79,35 +77,35 @@ public class GUI extends Thread {
 
     fieldAddressURL = new JTextField ();
     fieldFileName = new JTextField ( "file.*" );
-    contextMenu = new JPopupMenu ();
+    poUpMenuOK = new JPopupMenu ();
 
     Action copy = new DefaultEditorKit.CopyAction ();
     copy.putValue ( Action.NAME, "Copy" );
     copy.putValue ( Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke ( "control C" ) );
-    contextMenu.add ( copy );
+    poUpMenuOK.add ( copy );
 
     Action paste = new DefaultEditorKit.PasteAction ();
     paste.putValue ( Action.NAME, "Paste" );
     paste.putValue ( Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke ( "control V" ) );
-    contextMenu.add ( paste );
+    poUpMenuOK.add ( paste );
 
     Action cut = new DefaultEditorKit.CutAction ();
     cut.putValue ( Action.NAME, "Cut" );
     cut.putValue ( Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke ( "control X" ) );
-    contextMenu.add ( cut );
+    poUpMenuOK.add ( cut );
 
     Action selectAll = new SelectAll ();
-    contextMenu.add ( selectAll );
+    poUpMenuOK.add ( selectAll );
 
     frame.addMouseListener ( new MouseAdapter () {
       public void mouseReleased ( MouseEvent e ) {
         if ( e.getButton () == e.BUTTON3 ) {
-          contextMenu.show ( e.getComponent (), e.getX (), e.getY () );
+          poUpMenuOK.show ( e.getComponent (), e.getX (), e.getY () );
         }
       }
     });
-    fieldAddressURL.setComponentPopupMenu ( contextMenu );
-    fieldFileName.setComponentPopupMenu ( contextMenu );
+    fieldAddressURL.setComponentPopupMenu ( poUpMenuOK );
+    fieldFileName.setComponentPopupMenu ( poUpMenuOK );
 
     paneButton.setLayout ( new GridLayout ( 2, 1, 0, 0 ) );
     paneButton.add ( buttonGetProperties );
@@ -116,26 +114,24 @@ public class GUI extends Thread {
     windowContent.setBackground ( Color.DARK_GRAY );
     windowContent.add ( fieldAddressURL, BorderLayout.NORTH );
     windowContent.add ( fieldFileName, BorderLayout.SOUTH );
-    windowContent.add ( label, BorderLayout.WEST );
+    windowContent.add ( labelInfoDownload, BorderLayout.WEST );
     windowContent.add ( paneButton, BorderLayout.EAST );
     windowContent.add ( waitBar, BorderLayout.CENTER );
 
-
+    // LISTENERS
     buttonGetProperties.addActionListener ( ( ActionEvent event ) -> {
       System.out.println ( "button properties" );
       Downloader down = new Downloader ( gui );
-      //Downloader down = new Downloader ();
       down.ADDRESS_URL = fieldAddressURL.getText ();
       down.FILE_NAME = fieldFileName.getText ();
       down.setKey ( false );
       down.start ();
     }); // end of adapter
 
-    //////////////////////////////////////////////////////////////////////////
+
     buttonDownload.addActionListener ( ( ActionEvent event ) -> {
       System.out.println ( "button download" );
       Downloader down = new Downloader ( gui );
-      //Downloader down = new Downloader ();
       down.ADDRESS_URL = fieldAddressURL.getText ();
       down.FILE_NAME = fieldFileName.getText ();
       down.setKey( true );

@@ -1,4 +1,4 @@
-// Created oct 18 thu 2018
+// Created oct 27 sat 2018
 // https://docs.oracle.com/javase/tutorial/java/data/numberformat.html
 
 //ADDRESS_URL = "https://archive.org/download/Episode1-IntroductionToThePodcast/MBp1.mp3";
@@ -9,8 +9,8 @@
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.io.BufferedInputStream;
+import java.net.URL;
 import java.text.DecimalFormat;
 import javax.swing.JOptionPane;
 
@@ -20,11 +20,10 @@ public class Downloader extends Thread {
   public static String FILE_NAME;
   public static boolean key;
   public static GUI gui = new GUI ();
-  //public static GUI gui;
 
   public Downloader ( GUI guit ) {
     this.gui = gui;
-  } // */
+  }
 
   public void setKey ( boolean key ) { this.key = key; }
 
@@ -36,7 +35,7 @@ public class Downloader extends Thread {
     DecimalFormat formatterMB = new DecimalFormat ( "    .## MB" );
     DecimalFormat formatterKB = new DecimalFormat ( " ###.## KB" );
 
-    if ( key ) { // get file ( push button "Download" )
+    if ( key ) { // to get file - push button "Download"
       try (
             BufferedInputStream in = new BufferedInputStream ( new URL ( ADDRESS_URL ).openStream () );
             FileOutputStream fileOutputStream = new FileOutputStream ( FILE_NAME );
@@ -53,19 +52,19 @@ public class Downloader extends Thread {
             // formating amount to KB
             if ( i < 1000 ) {
               output = formatterKB.format ( i );
-              gui.label.setText ( output );
+              gui.labelInfoDownload.setText ( output );
               System.out.printf ( "%.2f KB\n", i );
             }
               else { // formating amount to MB
                 output = formatterMB.format ( i / 1000.0 );
-                gui.label.setText ( output );
+                gui.labelInfoDownload.setText ( output );
                 System.out.printf ( "%.2f MB\n", ( i / 1000.0 ) );
               }
             //
           }
         } catch ( IOException e ) { System.out.println ( e ); }
     }
-      else { // get info of file ( push button "properties" )
+      else { // to get info of file - push button "properties"
         try (
               BufferedInputStream in = new BufferedInputStream ( new URL ( ADDRESS_URL ).openStream () );
         ) {
@@ -74,11 +73,11 @@ public class Downloader extends Thread {
 
           if ( amount < 1000 ) {
             output = formatterKB.format ( amount );
-            gui.label.setText ( output );
+            gui.labelInfoDownload.setText ( output );
           }
             else {
               output = formatterMB.format ( amount / 1000.0 );
-              gui.label.setText ( output );
+              gui.labelInfoDownload.setText ( output );
             }
           } catch ( IOException e ) { System.out.println ( e ); }
       }
@@ -86,14 +85,14 @@ public class Downloader extends Thread {
         if ( amount < 1000 ) {
           System.out.println ( amount + " KB" );
           output = formatterKB.format ( amount );
-          gui.label.setText ( output );
+          gui.labelInfoDownload.setText ( output );
         }
           else {
             System.out.println ( ( amount / 1000.0 ) + " MB" );
             output = formatterMB.format ( amount / 1000.0 );
-            gui.label.setText ( output );
+            gui.labelInfoDownload.setText ( output );
           }
-        //System.out.println ( amount );
+        //System.out.println ( amount ); // the line checks value while debugging
         System.out.println ( FILE_NAME );
         System.out.println ( Thread.currentThread () );
         JOptionPane.showMessageDialog ( null, "That's All!" );
