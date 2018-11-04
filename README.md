@@ -19,3 +19,5 @@ Slightly changed the logic of the program. Fixed some bugs when trying to first 
 Some bugs fixed. Slightly improved code readability.  
 GUI made more friendly.  
 Added button "save" to select where to save the file.  
+2018 11 04  
+Added branch "work1" to correct class interaction errors  
