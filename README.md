@@ -21,3 +21,4 @@ GUI made more friendly.
 Added button "save" to select where to save the file.  
 2018 11 04  
 Added branch "work1" to correct class interaction errors  
+Code reworked, fixed display of file size at boot. Removed references to the GUI as a class.
