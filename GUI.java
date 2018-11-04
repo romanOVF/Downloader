@@ -1,4 +1,4 @@
-// Created oct 27 sat 2018
+// Created nov 04 sun 2018
 
 // https://stackoverflow.com/questions/1912758/how-to-add-a-popup-menu-to-a-jtextfield
 // http://www.java2s.com/Code/Java/Swing-JFC/Apopupmenuissometimescalledacontextmenu.htm
@@ -32,18 +32,19 @@ import javax.swing.text.TextAction;
 
 public class GUI extends Thread {
 
-  public static BorderLayout border;
-  public static JFrame frame = new JFrame ();
-  public static JPanel windowContent, paneProgress, paneButton;
+  private static BorderLayout border;
+  private static JFrame frame = new JFrame ();
+  private static JPanel windowContent, paneProgress, paneButton;
   public static JLabel labelInfoDownload, labelPropertiesFile, waitBar;
-  public static JButton buttonGetProperties, buttonDownload, buttonSave;
+  private static JButton buttonGetProperties, buttonDownload, buttonSave;
   private static ImageIcon alfaSpinner, picSpinner, picProperties, picDownload, picSave;
   public static JTextField fieldAddressURL, fieldFileName;
-  public static JPopupMenu popUpMenuContext;
+  private static JPopupMenu popUpMenuContext;
 
   public static String addressURL;
   public static String fileName;
-  public static GUI gui;
+  public static Downloader down;
+  public static CommonResource commonResource;
 
   public GUI () {
     setLayout ();
@@ -178,20 +179,43 @@ public class GUI extends Thread {
   private void listeners () {
     buttonGetProperties.addActionListener ( ( ActionEvent event ) -> {
       System.out.println ( "button properties" );
-      Downloader down = new Downloader ( gui );
+      setSpinner ();
+      down = new Downloader ();
       down.ADDRESS_URL = fieldAddressURL.getText ();
       down.FILE_NAME = fieldFileName.getText ();
       down.setKey ( false );
       down.start ();
+
+      while ( commonResource.status ) {
+        try { Thread.sleep ( 333 ); }
+        catch ( Exception e ) {}
+        labelPropertiesFile.setText ( commonResource.size );
+      }
+      if ( !commonResource.status ) {
+        setAlfaSpinner ();
+        labelPropertiesFile.setText ( commonResource.size );
+        commonResource.status = true;
+      }
     } ); // end of adapter
 
     buttonDownload.addActionListener ( ( ActionEvent event ) -> {
       System.out.println ( "button download" );
-      Downloader down = new Downloader ( gui );
+      setSpinner ();
+      down = new Downloader ();
       down.ADDRESS_URL = fieldAddressURL.getText ();
       down.FILE_NAME = fieldFileName.getText ();
       down.setKey( true );
       down.start ();
+
+      try { Thread.sleep ( 1000 ); }
+        catch ( Exception e ) {}
+      if ( commonResource.status ) {
+        labelInfoDownload.setText ( commonResource.size );
+      }
+      if ( !commonResource.status ) {
+        setAlfaSpinner ();
+        labelInfoDownload.setText ( commonResource.size );
+      }
     } ); // end of adapter
 
     buttonSave.addActionListener ( new SaveFile () );

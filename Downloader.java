@@ -1,4 +1,4 @@
-// Created oct 27 sat 2018
+// Created nov 04 sun 2018
 // https://docs.oracle.com/javase/tutorial/java/data/numberformat.html
 
 //ADDRESS_URL = "https://archive.org/download/Episode1-IntroductionToThePodcast/MBp1.mp3";
@@ -19,23 +19,24 @@ public class Downloader extends Thread {
   public static String ADDRESS_URL;
   public static String FILE_NAME;
   private static boolean key;
-  private static GUI gui = new GUI ();
+  public static CommonResource commonResource;
 
-  public Downloader ( GUI guit ) { this.gui = gui; }
+  public Downloader () {}
 
   public void setKey ( boolean key ) { this.key = key; }
 
   public void run () {
+    commonResource = new CommonResource ();
     double amount = 0;
     String infoAmount = null;
     String output = null;
-    gui.setSpinner ();
     DecimalFormat formatterMBDownload = new DecimalFormat ( "loaded    .## MB" );
     DecimalFormat formatterKBDownload = new DecimalFormat ( "loaded   ###.## KB" );
     DecimalFormat formatterMBProperties = new DecimalFormat ( "file size    .## MB" );
     DecimalFormat formatterKBProperties = new DecimalFormat ( "file size   ###.## KB" );
 
     if ( key ) { // to get file - push button "Download"
+      commonResource.status = true;
       try (
             BufferedInputStream in = new BufferedInputStream ( new URL ( ADDRESS_URL ).openStream () );
             FileOutputStream fileOutputStream = new FileOutputStream ( FILE_NAME );
@@ -52,12 +53,12 @@ public class Downloader extends Thread {
             // formating amount to KB
             if ( i < 1000 ) {
               output = formatterKBDownload.format ( i );
-              gui.labelInfoDownload.setText ( output );
+              commonResource.size = output;
               System.out.printf ( "%.2f KB\n", i );
             }
               else { // formating amount to MB
                 output = formatterMBDownload.format ( i / 1000.0 );
-                gui.labelInfoDownload.setText ( output );
+                commonResource.size = output;
                 System.out.printf ( "%.2f MB\n", ( i / 1000.0 ) );
               }
             //
@@ -65,6 +66,7 @@ public class Downloader extends Thread {
         } catch ( IOException e ) { System.out.println ( e ); }
     }
       else { // to get info of file - push button "properties"
+        commonResource.status = true;
         try (
               BufferedInputStream in = new BufferedInputStream ( new URL ( ADDRESS_URL ).openStream () );
         ) {
@@ -73,30 +75,31 @@ public class Downloader extends Thread {
 
           if ( amount < 1000 ) {
             output = formatterKBProperties.format ( amount );
-            gui.labelPropertiesFile.setText ( output );
+            commonResource.size = output;
           }
             else {
               output = formatterMBProperties.format ( amount / 1000.0 );
-              gui.labelPropertiesFile.setText ( output );
+              commonResource.size = output;
             }
           } catch ( IOException e ) { System.out.println ( e ); }
       }
-        gui.setAlfaSpinner ();
 
         if ( key ) { // get size loaded file
           if ( amount < 1000 ) {
             System.out.println ( amount + " KB" );
             output = formatterKBDownload.format ( amount );
-            gui.labelInfoDownload.setText ( output );
-            gui.labelPropertiesFile.setText ( "" );
+            commonResource.size = output;
+            commonResource.size = "";
           }
             else {
               System.out.println ( ( amount / 1000.0 ) + " MB" );
               output = formatterMBDownload.format ( amount / 1000.0 );
-              gui.labelInfoDownload.setText ( output );
-              gui.labelPropertiesFile.setText ( "" );
+              commonResource.size = output;
+              commonResource.size = "";
             }
         }
+        commonResource.status = false;
+
         //System.out.println ( amount ); // the line checks value while debugging
         System.out.println ( FILE_NAME );
         System.out.println ( Thread.currentThread () );

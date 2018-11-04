@@ -3,6 +3,6 @@
 
 public class RunProgram {
   public static void main ( String [] args ) {
-    new Downloader ( new GUI () );
+    new GUI ();
   }
 }
