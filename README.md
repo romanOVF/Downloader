@@ -21,4 +21,4 @@ GUI made more friendly.
 Added button "save" to select where to save the file.  
 2018 11 04  
 Added branch "work1" to correct class interaction errors  
-Code revised, corrected display size when downloading files. Removed references to the GUI as a class.
+Code revised, corrected display size when downloading files. Removed references to the GUI as a class.  
