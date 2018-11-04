@@ -43,8 +43,7 @@ public class GUI extends Thread {
 
   public static String addressURL;
   public static String fileName;
-  public static Downloader down;
-  public static CommonResource commonResource;
+  private Downloader downProperties, downDownload;
 
   public GUI () {
     setLayout ();
@@ -180,42 +179,19 @@ public class GUI extends Thread {
     buttonGetProperties.addActionListener ( ( ActionEvent event ) -> {
       System.out.println ( "button properties" );
       setSpinner ();
-      down = new Downloader ();
-      down.ADDRESS_URL = fieldAddressURL.getText ();
-      down.FILE_NAME = fieldFileName.getText ();
-      down.setKey ( false );
-      down.start ();
+      downProperties = new Downloader ( alfaSpinner, waitBar, labelPropertiesFile, labelInfoDownload, fieldAddressURL.getText (), fieldFileName.getText () );
+      downProperties.setKey ( false );
+      downProperties.start ();
 
-      while ( commonResource.status ) {
-        try { Thread.sleep ( 333 ); }
-        catch ( Exception e ) {}
-        labelPropertiesFile.setText ( commonResource.size );
-      }
-      if ( !commonResource.status ) {
-        setAlfaSpinner ();
-        labelPropertiesFile.setText ( commonResource.size );
-        commonResource.status = true;
-      }
     } ); // end of adapter
 
     buttonDownload.addActionListener ( ( ActionEvent event ) -> {
       System.out.println ( "button download" );
       setSpinner ();
-      down = new Downloader ();
-      down.ADDRESS_URL = fieldAddressURL.getText ();
-      down.FILE_NAME = fieldFileName.getText ();
-      down.setKey( true );
-      down.start ();
+      downDownload = new Downloader ( alfaSpinner, waitBar, labelPropertiesFile, labelInfoDownload, fieldAddressURL.getText (), fieldFileName.getText () );
+      downDownload.setKey( true );
+      downDownload.start ();
 
-      try { Thread.sleep ( 1000 ); }
-        catch ( Exception e ) {}
-      if ( commonResource.status ) {
-        labelInfoDownload.setText ( commonResource.size );
-      }
-      if ( !commonResource.status ) {
-        setAlfaSpinner ();
-        labelInfoDownload.setText ( commonResource.size );
-      }
     } ); // end of adapter
 
     buttonSave.addActionListener ( new SaveFile () );
